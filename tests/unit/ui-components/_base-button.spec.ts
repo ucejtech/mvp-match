@@ -1,36 +1,53 @@
 import { shallowMount } from '@vue/test-utils';
-import BaseAvatar from '@/components/ui-components/_base-avatar.vue';
+import BaseButton from '@/components/ui-components/_base-button.vue';
 
-describe('@/components/ui-components/_base-avatar.vue', () => {
-  it('renders correct background color when passed as props', () => {
-    const bgColor = 'red';
-
-    const { element } = shallowMount(BaseAvatar, {
-      propsData: { color: bgColor }
+describe('@/components/ui-components/_base-button.vue', () => {
+  it('renders icon when showIcon props is true', () => {
+    const wrapper = shallowMount(BaseButton, {
+      propsData: { showIcon: true }
     });
 
-    expect(getComputedStyle(element).getPropertyValue('background-color')).toBe(
-      bgColor
-    );
+    expect(wrapper.find('img').exists()).toBeTruthy();
   });
 
-  it('renders correct text color when passed as props', () => {
-    const textColor = 'black';
-
-    const { element } = shallowMount(BaseAvatar, {
-      propsData: { textColor }
+  it('does not render icon when showIcon props is false', () => {
+    const wrapper = shallowMount(BaseButton, {
+      propsData: { showIcon: false }
     });
 
-    expect(getComputedStyle(element).getPropertyValue('color')).toBe(textColor);
+    expect(wrapper.find('img').exists()).toBeFalsy();
   });
 
   it('Renders default slot', () => {
-    const slotContent = 'NDM';
-    const { element } = shallowMount(BaseAvatar, {
+    const slotContent = 'Generate';
+    const { element } = shallowMount(BaseButton, {
       slots: {
         default: slotContent
       }
     });
     expect(element.innerHTML).toContain(slotContent);
+  });
+
+  it('Button loads when loading is set to true', () => {
+    const loadingText = '<span>Loading...</span>';
+    const { element } = shallowMount(BaseButton, {
+      propsData: {
+        loading: true
+      }
+    });
+    expect(element.innerHTML).toContain(loadingText);
+  });
+
+  it('Check if slot is removed when loading is triggered', () => {
+    const slotContent = '<span>Generate </span>';
+    const { element } = shallowMount(BaseButton, {
+      propsData: {
+        loading: true
+      },
+      slots: {
+        default: slotContent
+      }
+    });
+    expect(element.innerHTML).not.toContain(slotContent);
   });
 });

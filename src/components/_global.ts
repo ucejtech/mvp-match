@@ -32,8 +32,6 @@ requireComponent.keys().forEach((fileName) => {
     // construct componentName
     .join('');
 
-  console.log(componentName);
-
   // Globally register the component
   Vue.component(componentName, componentConfig.default || componentConfig);
 });
