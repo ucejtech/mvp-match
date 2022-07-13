@@ -82,7 +82,9 @@ export default class CDropdown extends Vue {
   }
 
   get getItemText() {
-    return this.items.find((item) => item[this.itemValue] === this.value);
+    return (
+      this.items.find((item) => item[this.itemValue] === this.value) || null
+    );
   }
 
   private hideDropDown(): void {
@@ -94,9 +96,10 @@ export default class CDropdown extends Vue {
 <style lang="scss" scoped>
 .c-dropdown {
   @apply relative;
+  overflow-x: inherit;
 
   &__options {
-    @apply absolute w-full rounded-[5px] mt-1 py-[8px] text-white text-sm;
+    @apply absolute w-full rounded-[5px] mt-1 py-[8px] text-white text-sm z-10;
 
     .option {
       cursor: pointer;

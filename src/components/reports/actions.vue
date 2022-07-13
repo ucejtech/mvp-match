@@ -35,5 +35,6 @@ export default class ReportsActions extends Vue {
 <style lang="scss" scoped>
 .c-reports-header-actions {
   @apply flex items-center gap-[23px];
+  overflow-x: inherit;
 }
 </style>

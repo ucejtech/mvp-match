@@ -12,7 +12,7 @@ export default class AppFooter extends Vue {}
 <style lang="scss" scoped>
 .c-footer {
   background: #fff;
-  @apply absolute bottom-0 pl-[100px] py-[5px] font-bold;
+  @apply absolute bottom-0 pl-[89px] py-[5px] font-bold;
   color: color(secondary, base);
 }
 </style>
