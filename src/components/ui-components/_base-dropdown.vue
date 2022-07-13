@@ -107,20 +107,20 @@ export default class CDropdown extends Vue {
     }
 
     &--primary {
-      background-color: color(primary, base);
+      background-color: picker(primary, base);
 
       .option {
         &:hover {
-          background-color: color(primary, darker);
+          background-color: picker(primary, darker);
         }
       }
     }
 
     &--secondary {
-      background-color: color(secondary, base);
+      background-color: picker(secondary, base);
       .option {
         &:hover {
-          background-color: color(secondary, darker);
+          background-color: picker(secondary, darker);
         }
       }
     }

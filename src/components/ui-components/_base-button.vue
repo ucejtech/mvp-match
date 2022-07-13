@@ -44,14 +44,14 @@ export default class CButton extends Vue {
 .c-button {
   @apply px-[10px] py-[8px] rounded-md text-sm flex items-center gap-[17px];
   color: #fff;
-  background-color: color(primary, base);
+  background-color: picker(primary, base);
 
   &--primary {
-    background-color: color(primary, base);
+    background-color: picker(primary, base);
   }
 
   &--secondary {
-    background-color: color(secondary, base);
+    background-color: picker(secondary, base);
   }
 }
 </style>

@@ -29,7 +29,7 @@ export default class AppNavbar extends Vue {
 <style lang="scss" scoped>
 .c-top-nav {
   @apply flex items-center justify-between py-[19px] px-[35px];
-  border-bottom: 2px solid color(grey, base);
+  border-bottom: 2px solid picker(grey, base);
 
   &__brand {
     @apply flex gap-[25px];
@@ -40,7 +40,7 @@ export default class AppNavbar extends Vue {
 
     &-name {
       @apply font-bold;
-      color: color(secondary, base);
+      color: picker(secondary, base);
     }
   }
 }

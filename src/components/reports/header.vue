@@ -28,12 +28,12 @@ export default class ReportsHeader extends Vue {}
 
   &__title {
     @apply text-2xl font-bold;
-    color: color(black, base);
+    color: picker(black, base);
   }
 
   &__caption {
     @apply text-base font-bold;
-    color: color(dark-grey, base);
+    color: picker(dark-grey, base);
   }
 }
 </style>

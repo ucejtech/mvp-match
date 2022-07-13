@@ -1,37 +1,28 @@
 <template>
-  <div>
-    <div class="table-container">
-      <table>
-        <tr class="pb-3 header">
-          <!-- <th>S/N</th> -->
-          <th v-for="(header, index) in headers" :key="index">
-            {{ header.title }}
-          </th>
-        </tr>
-        <tr
-          v-if="data.length < 1"
-          class="empty-message d-flex justify-center mt-4"
-        >
-          {{
-            emptyMessage
-          }}
-        </tr>
-        <tr
-          v-else
-          class="mt-3 py-4 px-2 body"
-          v-for="(item, index) in data"
-          :key="index"
-        >
-          <!-- <td>{{ index + 1 }}.</td> -->
-          <td v-for="(column, index) in headers" :key="index">
-            <slot :name="column.value" :item="item">
-              {{ item[column.value] }}
-            </slot>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
+  <table class="c-table">
+    <tr class="header px-[5px]">
+      <th v-for="(header, index) in headers" :key="index">
+        {{ header.title }}
+      </th>
+    </tr>
+    <tr v-if="data.length < 1" class="empty-message mt-4">
+      {{
+        emptyMessage
+      }}
+    </tr>
+    <tr
+      v-else
+      class="mt-3 py-4 body px-[5px]"
+      v-for="(item, index) in data"
+      :key="index"
+    >
+      <td v-for="(column, index) in headers" :key="index">
+        <slot :name="column.value" :item="item">
+          {{ item[column.value] }}
+        </slot>
+      </td>
+    </tr>
+  </table>
 </template>
 
 <script lang="ts">
@@ -62,34 +53,30 @@ export default class DataTable extends Vue {
 </script>
 
 <style lang="scss">
-div {
-  overflow-x: auto;
-  table {
-    width: 100%;
-    tr {
-      @apply flex justify-between;
-      f &.empty-message {
-        color: picker(grey, grey1);
-        width: 100%;
+.c-table {
+  @apply w-full font-normal;
+  tr {
+    @apply flex justify-between;
+    &.empty-message {
+      width: 100%;
+    }
+
+    &:first-child {
+      @apply bg-white py-[5px];
+    }
+
+    td,
+    th {
+      &:first-child {
+        text-align: left;
       }
-      td,
-      th {
-        &:not(:first-child) {
-          min-width: 260px;
-          text-align: left;
-          text-align: center;
-        }
-        &:first-child {
-          min-width: 50px;
-        }
+      &:last-child {
+        text-align: right;
       }
-      &.header {
-        color: picker(grey, grey1);
-        border-bottom: 1px solid picker(grey, grey11);
-      }
-      &.body {
-        background: #fff;
-      }
+    }
+
+    &.empty-message {
+      @apply flex justify-center;
     }
   }
 }
