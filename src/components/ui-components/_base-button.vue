@@ -48,10 +48,16 @@ export default class CButton extends Vue {
 
   &--primary {
     background-color: picker(primary, base);
+    &:hover {
+      background-color: picker(primary, darker);
+    }
   }
 
   &--secondary {
     background-color: picker(secondary, base);
+    &:hover {
+      background-color: picker(secondary, darker);
+    }
   }
 }
 </style>

@@ -3,19 +3,16 @@
     <header
       class="c-reports-project__header"
       v-if="!hideHeader"
-      @click="$emit('expand', data.projectId)"
+      @click="$emit('expand', data.gatewayId)"
     >
       <div class="c-reports-project__header-title">{{ data.name }}</div>
       <div class="c-reports-project__header-title">
-        Total: {{ projectTotal | formatCurrency }}
+        Total: {{ gatewayTotal | formatCurrency }}
       </div>
     </header>
     <base-table v-if="expand" :headers="header" :data="reports" class="mt-3">
       <template v-slot:created="{ item }">
         {{ item.created.split('-').reverse().join('/') }}
-      </template>
-      <template v-slot:gatewayId="{ item }">
-        {{ getGatewayName(item.gatewayId) }}
       </template>
     </base-table>
   </div>
@@ -26,7 +23,7 @@
 import { IReportForm } from '@/types/interfaces';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { IFilters, IGateway, IProject, IReport } from '../../types/models';
+import { IFilters, IGateway, IReport } from '../../types/models';
 import { ReportService } from '../../services/report.service';
 import { ResponseWrapper } from '@/services/util';
 
@@ -38,7 +35,7 @@ const gateways = namespace('gateway');
     event: 'setTotal'
   }
 })
-export default class ReportsProject extends Vue {
+export default class ReportsGateways extends Vue {
   @Prop({ default: false })
   expand!: boolean;
 
@@ -46,7 +43,7 @@ export default class ReportsProject extends Vue {
   hideHeader!: boolean;
 
   @Prop()
-  data!: IProject;
+  data!: IGateway;
 
   header = [
     {
@@ -65,12 +62,12 @@ export default class ReportsProject extends Vue {
 
   reports: IReport[] = [];
 
-  @Watch('projectTotal')
+  @Watch('gatewayTotal')
   changeTotal(val: string | number) {
     this.$emit('setTotal', val);
   }
 
-  get projectTotal() {
+  get gatewayTotal() {
     const total = Math.round(
       this.reports.reduce((acc, curr) => acc + curr.amount, 0)
     );
@@ -79,10 +76,10 @@ export default class ReportsProject extends Vue {
 
   async loadReports() {
     const data: IReportForm = {
-      projectId: this.data.projectId,
+      gatewayId: this.data.gatewayId,
       ...(this.filters.fromDate ? { from: this.filters.fromDate } : null),
       ...(this.filters.toDate ? { to: this.filters.toDate } : null),
-      ...(this.filters.gatewayId ? { gatewayId: this.filters.gatewayId } : null)
+      ...(this.filters.projectId ? { projectId: this.filters.projectId } : null)
     };
 
     try {
@@ -91,18 +88,6 @@ export default class ReportsProject extends Vue {
     } catch (err: any) {
       this.$toast.error(err.message || err.statusMessage);
     }
-  }
-
-  getGatewayName(id: string) {
-    const gateway = this.gatewaysObject[id];
-    return gateway ? gateway.name : '-';
-  }
-
-  // By looping over the shorter array and converting to an object, computation time is reduced for getting gatewayName
-  get gatewaysObject(): Record<string, IGateway> {
-    return this.gateways.reduce((acc, curr) => {
-      return { ...acc, [curr.gatewayId]: curr };
-    }, {} as Record<string, IGateway>);
   }
 
   @Watch('data', { immediate: true })
@@ -115,30 +100,8 @@ export default class ReportsProject extends Vue {
     this.loadReports();
   }
 
-  @Watch('isFilteredByGateway', { immediate: true })
-  changeHeader(val: boolean) {
-    if (!val) {
-      this.header.splice(1, 0, {
-        title: 'Gateway',
-        value: 'gatewayId'
-      });
-      this.header.join();
-    } else {
-      const index = this.header.findIndex((item) => item.value === 'gatewayId');
-      if (index > -1) this.header.splice(index, 1);
-    }
-  }
-
-  @Watch('isFilteredByProject')
-  sendTotal() {
-    this.$emit('setTotal', this.projectTotal);
-  }
-
   @filters.Getter
   isFilteredByGateway!: boolean;
-
-  @filters.Getter
-  isFilteredByProject!: boolean;
 
   @filters.Getter
   filters!: IFilters;

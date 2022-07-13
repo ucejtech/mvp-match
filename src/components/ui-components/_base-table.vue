@@ -65,6 +65,12 @@ export default class DataTable extends Vue {
       @apply bg-white py-[5px];
     }
 
+    &.body {
+      &:nth-child(odd) {
+        @apply bg-white;
+      }
+    }
+
     td,
     th {
       &:first-child {

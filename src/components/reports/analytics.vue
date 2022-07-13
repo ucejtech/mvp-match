@@ -1,15 +1,21 @@
 <template>
   <div class="c-reports-analytics">
-    <doughnut-chart :series="series" :labels="labels" />
+    <doughnut-chart :series="data.series" :labels="data.labels" />
     <div class="c-reports-analytics__total">
-      <slot>GATEWAY TOTAL | 14,065 USD</slot>
+      <slot
+        >{{ isFilteredByGateway ? 'GATEWAY' : 'PROJECT' }} TOTAL |
+        {{ total | formatCurrency }}</slot
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 import DoughnutChart from './Chart.vue';
+
+const filters = namespace('filters');
 
 @Component({
   components: {
@@ -17,8 +23,19 @@ import DoughnutChart from './Chart.vue';
   }
 })
 export default class ReportsAnalytics extends Vue {
-  series = [60, 20, 99];
-  labels = ['Project 1', 'Project 2', 'Project 3'];
+  @Prop({
+    default: 0
+  })
+  total!: number;
+
+  @Prop()
+  data!: { series: (string | number)[]; labels: string[] };
+
+  @filters.Getter
+  isFilteredByProject!: boolean;
+
+  @filters.Getter
+  isFilteredByGateway!: boolean;
 }
 </script>
 

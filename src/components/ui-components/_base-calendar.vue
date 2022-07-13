@@ -11,6 +11,8 @@
       class="c-calendar__input"
       :id="componentCustomId"
       type="date"
+      :min="minDate"
+      :max="maxDate"
       :value="value"
       @input="updateValue"
     />
@@ -31,6 +33,16 @@ export default class CCalendar extends Vue {
     default: ''
   })
   value!: string;
+
+  @Prop({
+    default: '2021-01-01'
+  })
+  minDate!: string;
+
+  @Prop({
+    default: '2021-12-31'
+  })
+  maxDate!: string;
 
   componentCustomId = Math.floor(Math.random() * 1000000).toString();
 

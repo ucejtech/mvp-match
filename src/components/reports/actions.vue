@@ -1,34 +1,73 @@
 <template>
   <div class="c-reports-header-actions">
-    <base-dropdown v-model="project" :items="projects">
+    <base-dropdown
+      v-model="projectId"
+      item-text="name"
+      item-value="projectId"
+      :items="projects"
+    >
       All Projects</base-dropdown
     >
-    <base-dropdown v-model="gateway" :items="gateways"
+    <base-dropdown
+      v-model="gatewayId"
+      item-text="name"
+      item-value="gatewayId"
+      :items="gateways"
       >All Gateways</base-dropdown
     >
-    <base-calendar v-model="calendar">From Date</base-calendar>
-    <base-calendar v-model="calendar">To Date </base-calendar>
-    <base-button variant="secondary"> Generate Report</base-button>
+    <base-calendar v-model="fromDate">From Date</base-calendar>
+    <base-calendar v-model="toDate">To Date </base-calendar>
+    <base-button variant="secondary" @click="$emit('generate:report')">
+      Generate Report</base-button
+    >
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { IFilterState } from '@/store/modules/filters';
+import { IGateway, IProject } from '@/types/models';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+
+const filters = namespace('filters');
+const projects = namespace('project');
+const gateways = namespace('gateway');
 
 @Component
 export default class ReportsActions extends Vue {
-  gateway = '';
-  project = '';
-  calendar = '';
+  gatewayId = '';
+  projectId = '';
+  fromDate = '2021-01-01';
+  toDate = '2021-12-31';
 
-  gateways = [
-    { title: 'All Gateways', value: 'all' },
-    { title: 'Gateway 1', value: 'gateway-1' }
-  ];
-  projects = [
-    { title: 'All Projects', value: 'all' },
-    { title: 'Project 1', value: 'project-1' }
-  ];
+  @Watch('gatewayId')
+  @Watch('projectId')
+  @Watch('fromDate')
+  @Watch('toDate')
+  saveFilters(): void {
+    this.SET_FILTERS({
+      gatewayId: this.gatewayId,
+      projectId: this.projectId,
+      fromDate: this.fromDate,
+      toDate: this.toDate
+    });
+  }
+
+  get projects() {
+    return [{ name: 'All Projects', projectId: 'all' }, ...this.projectList];
+  }
+  get gateways() {
+    return [{ name: 'All Gateways', projectId: 'all' }, ...this.gatewayList];
+  }
+
+  @filters.Mutation('SET_FILTERS')
+  SET_FILTERS!: (filters: IFilterState) => void;
+
+  @projects.Getter
+  projectList!: IProject[];
+
+  @gateways.Getter
+  gatewayList!: IGateway[];
 }
 </script>
 

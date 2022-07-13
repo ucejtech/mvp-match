@@ -111,7 +111,7 @@ export default class CDropdown extends Vue {
 
       .option {
         &:hover {
-          background-color: picker(primary, darker);
+          background-color: picker(secondary, base);
         }
       }
     }
@@ -120,7 +120,7 @@ export default class CDropdown extends Vue {
       background-color: picker(secondary, base);
       .option {
         &:hover {
-          background-color: picker(secondary, darker);
+          background-color: picker(primary, base);
         }
       }
     }

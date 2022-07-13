@@ -6,20 +6,48 @@
         Easily generate a report of your transactions
       </p>
     </div>
-    <reports-actions />
+    <reports-actions @generate:report="generateReport" />
   </header>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { IFilters } from '@/types/models';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 import ReportsActions from './actions.vue';
+
+const filters = namespace('filters');
 
 @Component({
   components: {
     ReportsActions
   }
 })
-export default class ReportsHeader extends Vue {}
+export default class ReportsHeader extends Vue {
+  isRendered = false;
+
+  generateReport() {
+    const graphStatus =
+      (this.isFilteredByGateway && !this.isFilteredByProject) ||
+      (this.isFilteredByProject && !this.isFilteredByGateway);
+    this.isRendered = graphStatus;
+    this.$store.commit('SET_GRAPH_VISIBILITY', graphStatus);
+  }
+
+  @Watch('filters', { deep: true })
+  refresh() {
+    if (this.isRendered) this.generateReport();
+  }
+
+  @filters.Getter
+  filters!: IFilters;
+
+  @filters.Getter
+  isFilteredByProject!: boolean;
+
+  @filters.Getter
+  isFilteredByGateway!: boolean;
+}
 </script>
 
 <style lang="scss" scoped>
